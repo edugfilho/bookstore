@@ -1,1 +1,29 @@
-<p>Hi i am a bookstore -_-</p>
+@(bookList: List[Book])
+
+<script>
+$(document).ready(function(){
+    $('#mainTable').DataTable();
+});
+</script>
+
+<table id="mainTable" class="display">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Pages</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(book <- bookList) {
+            <tr>
+                <td>@book.getId()</td>
+                <td>@book.getTitle()</td>
+                <td>@book.getAuthor()</td>
+                <td>@book.getPages()</td>
+            </tr>
+        }
+    </tbody>
+
+</table>

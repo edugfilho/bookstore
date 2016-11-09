@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index()
+GET     /books                      controllers.Application.listBooks()
 GET     /dashboard                  controllers.Dashboard.index()
 
 POST    /login                      controllers.Application.authenticate()

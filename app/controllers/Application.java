@@ -1,11 +1,13 @@
 package controllers;
 
+import models.Book;
 import models.User;
 import models.utils.AppException;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints;
 import play.i18n.Messages;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -32,19 +34,18 @@ public class Application extends Controller {
      * @return login page or dashboard
      */
     public Result index() {
-        // Check that the email matches a confirmed user before we redirect
-        String email = ctx().session().get("email");
-        if (email != null) {
-            User user = User.findByEmail(email);
-            if (user != null && user.validated) {
-                return GO_DASHBOARD;
-            } else {
-                Logger.debug("Clearing invalid session credentials");
-                session().clear();
-            }
-        }
+        Book one = new Book();
+        one.setAuthor("sets");
+        one.setCoverUrl("asdasd");
+        one.setPages(2);
+        one.setTitle("tite");
+        one.save();
 
-        return ok(index.render(form(Register.class), form(Login.class)));
+        return listBooks();
+    }
+
+    public Result listBooks() {
+        return ok(Json.toJson(Book.find.all()));
     }
 
     /**
@@ -128,7 +129,7 @@ public class Application extends Controller {
         Form<Register> registerForm = form(Register.class);
 
         if (loginForm.hasErrors()) {
-            return badRequest(index.render(registerForm, loginForm));
+            return badRequest(index.render(Book.find.all()));
         } else {
             session("email", loginForm.get().email);
             return GO_DASHBOARD;

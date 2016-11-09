@@ -36,6 +36,8 @@ public class Book extends Model {
     @Column
     private String coverUrl;
 
+    public static Finder<Long, Book> find = new Finder<Long,Book>(Book.class);
+
     public long getId() {
         return id;
     }
