@@ -12,6 +12,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
+import java.util.List;
+
 import static play.data.Form.form;
 
 /**
@@ -29,9 +31,9 @@ public class Application extends Controller {
     );
 
     /**
-     * Display the login page or dashboard if connected
+     * Display the list of books on the DB.
      *
-     * @return login page or dashboard
+     * @return list of books
      */
     public Result index() {
         Book one = new Book();
@@ -41,11 +43,15 @@ public class Application extends Controller {
         one.setTitle("tite");
         one.save();
 
-        return listBooks();
+        return ok(index.render(getAllBooks()));
     }
 
     public Result listBooks() {
-        return ok(Json.toJson(Book.find.all()));
+        return ok(Json.toJson(getAllBooks()));
+    }
+
+    public List<Book> getAllBooks() {
+        return Book.find.all();
     }
 
     /**
