@@ -5,6 +5,10 @@
 # Home page
 GET     /                           controllers.Application.index()
 GET     /books                      controllers.Application.listBooks()
+
+GET     /book                       controllers.Application.insertBook()
+POST    /book                       controllers.Application.runInsertBook()
+
 GET     /dashboard                  controllers.Dashboard.index()
 
 POST    /login                      controllers.Application.authenticate()

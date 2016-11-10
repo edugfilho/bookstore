@@ -54,6 +54,22 @@ public class Application extends Controller {
         return Book.find.all();
     }
 
+    public Result insertBook() {
+        return ok();
+    }
+
+    public Result runInsertBook() {
+        return ok();
+    }
+
+    public static class BookForm {
+
+        public String author;
+        public int pages;
+        public String title;
+        public String coverUrl;
+    }
+
     /**
      * Login class used by Login Form.
      */
