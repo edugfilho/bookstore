@@ -43,7 +43,7 @@ public class Application extends Controller {
         one.setTitle("tite");
         one.save();
 
-        return ok(index.render(getAllBooks()));
+        return ok(index.render());
     }
 
     public Result listBooks() {
@@ -135,7 +135,7 @@ public class Application extends Controller {
         Form<Register> registerForm = form(Register.class);
 
         if (loginForm.hasErrors()) {
-            return badRequest(index.render(Book.find.all()));
+            return badRequest(index.render());
         } else {
             session("email", loginForm.get().email);
             return GO_DASHBOARD;

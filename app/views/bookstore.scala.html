@@ -1,8 +1,18 @@
-@(bookList: List[Book])
 
 <script>
 $(document).ready(function(){
-    $('#mainTable').DataTable();
+    $('#mainTable').DataTable({
+        "ajax": {
+            "url": "@routes.Application.listBooks",
+            "dataSrc": "",
+        },
+        "columns": [
+            {"data": "id"},
+            {"data": "title"},
+            {"data": "author"},
+            {"data": "pages"}
+        ]
+    });
 });
 </script>
 
@@ -15,15 +25,5 @@ $(document).ready(function(){
             <th>Pages</th>
         </tr>
     </thead>
-    <tbody>
-        @for(book <- bookList) {
-            <tr>
-                <td>@book.getId()</td>
-                <td>@book.getTitle()</td>
-                <td>@book.getAuthor()</td>
-                <td>@book.getPages()</td>
-            </tr>
-        }
-    </tbody>
 
 </table>
