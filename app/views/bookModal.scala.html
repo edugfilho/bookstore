@@ -1,6 +1,8 @@
 @(bookForm: Form[controllers.Application.BookForm], create: Boolean)
 @import helper._
+<script>
 
+</script>
 <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -42,7 +44,7 @@
                             )
                             @textarea(
                                 bookForm("description"),
-                                'placeholder -> "Write ",
+                                'placeholder -> "Write the book description here...",
                                 '_label -> "Description",
                                 'maxlength -> 500,
                                 'class -> "form-control",

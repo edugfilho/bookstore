@@ -1,4 +1,4 @@
-title=PlayStartApp
+title=Bookstore
 
 # Default messages
 

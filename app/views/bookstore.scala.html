@@ -1,21 +1,5 @@
 @(bookForm: Form[controllers.Application.BookForm])
 
-<script>
-$(document).ready(function(){
-    $('#mainTable').DataTable({
-        "ajax": {
-            "url": "@routes.Application.listBooks",
-            "dataSrc": "",
-        },
-        "columns": [
-            {"data": "id"},
-            {"data": "title"},
-            {"data": "author"},
-            {"data": "pages"}
-        ]
-    });
-});
-</script>
 <div>
     <a data-toggle="modal" href="#bookModal" class="btn btn-primary btn-lg">Add new</a>
 </div>
