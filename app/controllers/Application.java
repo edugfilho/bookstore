@@ -36,14 +36,9 @@ public class Application extends Controller {
      * @return list of books
      */
     public Result index() {
-        Book one = new Book();
-        one.setAuthor("sets");
-        one.setCoverUrl("asdasd");
-        one.setPages(2);
-        one.setTitle("tite");
-        one.save();
 
-        return ok(index.render());
+        Form<BookForm> bookForm = form(BookForm.class);
+        return ok(index.render(bookForm));
     }
 
     public Result listBooks() {
@@ -59,14 +54,37 @@ public class Application extends Controller {
     }
 
     public Result runInsertBook() {
-        return ok();
+        Form<BookForm> bookForm = form(BookForm.class).bindFromRequest();
+
+        //TODO validate
+
+        Book book = new Book();
+        book.setTitle(bookForm.get().title);
+        book.setAuthor(bookForm.get().author);
+        book.setPages(bookForm.get().pages);
+        book.setDescription(bookForm.get().description);
+        book.save();
+
+        return redirect(routes.Application.index());
     }
 
     public static class BookForm {
 
-        public String author;
-        public int pages;
+        @Constraints.MaxLength(150)
+        @Constraints.Required
         public String title;
+
+        @Constraints.MaxLength(150)
+        @Constraints.Required
+        public String author;
+
+        @Constraints.Min(1)
+        @Constraints.Max(9999)
+        @Constraints.Required
+        public int pages;
+
+        @Constraints.MaxLength(500)
+        public String description;
         public String coverUrl;
     }
 
@@ -151,7 +169,7 @@ public class Application extends Controller {
         Form<Register> registerForm = form(Register.class);
 
         if (loginForm.hasErrors()) {
-            return badRequest(index.render());
+            return badRequest(index.render(null));
         } else {
             session("email", loginForm.get().email);
             return GO_DASHBOARD;

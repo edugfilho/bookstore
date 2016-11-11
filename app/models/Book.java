@@ -6,6 +6,7 @@ import play.data.validation.Constraints;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 /**
  * Represents a Book.
@@ -17,23 +18,24 @@ public class Book extends Model {
     @Id
     private long id;
 
-    @Constraints.Required
+
     @Column
+    @NotNull
     private String title;
 
-    @Column
+    @Column(columnDefinition = "text")
     private String description;
 
-    @Constraints.Required
     @Column
+    @NotNull
     private String author;
 
-    @Constraints.Required
     @Column
+    @NotNull
     private int pages;
 
-    @Constraints.Required
     @Column
+    //TODO @NotNull
     private String coverUrl;
 
     public static Finder<Long, Book> find = new Finder<Long,Book>(Book.class);

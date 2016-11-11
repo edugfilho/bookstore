@@ -1,3 +1,4 @@
+@(bookForm: Form[controllers.Application.BookForm])
 
 <script>
 $(document).ready(function(){
@@ -16,10 +17,10 @@ $(document).ready(function(){
 });
 </script>
 <div>
-    <a data-toggle="modal" href="#bookModal" class="btn btn-primary btn-lg">New book</a>
+    <a data-toggle="modal" href="#bookModal" class="btn btn-primary btn-lg">Add new</a>
 </div>
 
-@bookModal(true)
+@bookModal(bookForm, true)
 <table id="mainTable" class="display">
     <thead>
         <tr>

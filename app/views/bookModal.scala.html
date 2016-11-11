@@ -1,4 +1,5 @@
-@(create: Boolean)
+@(bookForm: Form[controllers.Application.BookForm], create: Boolean)
+@import helper._
 
 <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -7,13 +8,54 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title">@if(create){Create}else{Edit} book</h4>
             </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            @form(controllers.routes.Application.runInsertBook()){
+                <div class="modal-body">
+
+                        <div class="form-group">
+                            @inputText(
+                                bookForm("title"),
+                                'placeholder -> "e.g. The Hitchhicker's Guide to the Galaxy",
+                                '_label -> "Title",
+                                'class -> "form-control",
+                                'maxlength -> 150,
+                                'required -> true,
+                                '_showConstraints -> false
+                            )
+                            @inputText(
+                                bookForm("author"),
+                                'placeholder -> "e.g. Douglas Adams",
+                                '_label -> "Author name",
+                                'class -> "form-control",
+                                'maxlength -> 150,
+                                'required -> true,
+                                '_showConstraints -> false
+                            )
+                            @inputText(
+                                bookForm("pages"),
+                                '_label -> "Number of pages",
+                                'class -> "form-control",
+                                'type -> "number",
+                                'min -> 1,
+                                'max -> 9999,
+                                'required -> true,
+                                '_showConstraints -> false
+                            )
+                            @textarea(
+                                bookForm("description"),
+                                'placeholder -> "Write ",
+                                '_label -> "Description",
+                                'maxlength -> 500,
+                                'class -> "form-control",
+                                '_showConstraints -> false
+                            )
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            }
+
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
