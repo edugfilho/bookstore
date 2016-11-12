@@ -27,6 +27,7 @@ $(function() {
         $("#bookModal").modal("show")
         $.get("@routes.Application.upsertBook(true, 0L)", function(data){
            $("#modalFields").append(data);
+           $("#modalTitle").html("Create book");
         });
     });
 });
@@ -36,6 +37,7 @@ function editItem(id){
    $("#bookModal").modal("show")
    $.get("/book/false," + id , function(data){
        $("#modalFields").append(data);
+       $("#modalTitle").html("Edit book");
    });
 };
 function removeItem(id){
@@ -70,7 +72,7 @@ function removeItem(id){
                 <div class="row">
                     <div class="col-md-12">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Create book</h4>
+                        <h4 class="modal-title" id="modalTitle"></h4>
                     </div>
                 </div>
             </div>
