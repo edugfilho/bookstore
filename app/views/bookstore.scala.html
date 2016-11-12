@@ -1,17 +1,19 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $('#mainTable').DataTable({
+        "dom": '<"row" <"col-md-4"<"pull-left"f>><"col-md-3"<"pull-right"i>>><"row"<"col-md-12" tlp>>',
         "ajax": {
             "url": "@routes.Application.listBooks",
             "dataSrc": "",
         },
         "columns": [
-            {"data": "id"},
+            {"data": "id", "width": "10%"},
             {"data": "title"},
             {"data": "author"},
-            {"data": "pages"},
+            {"data": "pages", "width": "10%",},
             {
                 "sortable": false,
+                "width": "10%",
                 "render": function (data, type, row) {
                     return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" style="font-size: 22px;" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" onclick="removeItem(\'' + row.id + '\')" style="font-size: 22px;" data-original-title="Delete"></a>';
                 }
@@ -56,9 +58,7 @@ function removeItem(id){
 };
 </script>
 
-<div>
-    <a id="addBookBtn" class="btn btn-primary btn-lg" name="1">Add new</a>
-</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
@@ -69,15 +69,21 @@ function removeItem(id){
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<table id="mainTable" class="display">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Pages</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <a id="addBookBtn" class="btn btn-primary btn-lg pull-right">Add new</a>
+    </div>
 
-</table>
+    <table id="mainTable" class="display">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Pages</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
