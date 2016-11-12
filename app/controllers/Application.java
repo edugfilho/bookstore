@@ -10,6 +10,7 @@ import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.bookModalContent;
 import views.html.index;
 
 import java.util.List;
@@ -49,26 +50,52 @@ public class Application extends Controller {
         return Book.find.all();
     }
 
-    public Result insertBook() {
-        return ok();
+    /**
+     * Renders a modal page to insert a new book if create is true,
+     * otherwise to update the existing book, referenced by id.
+     * @param id the book id
+     * @return
+     */
+    public Result upsertBook(Boolean create, Long id) {
+        Form<BookForm> bookForm = form(BookForm.class);
+
+        if(!create) {
+            BookForm formData = new BookForm();
+            Book book = Book.find.byId(id);
+            formData.id = id;
+            formData.author = book.getAuthor();
+            formData.description = book.getDescription();
+            formData.pages = book.getPages();
+            formData.title = book.getTitle();
+            bookForm = bookForm.fill(formData);
+        }
+        return ok(bookModalContent.render(bookForm, create));
     }
 
-    public Result runInsertBook() {
-        Form<BookForm> bookForm = form(BookForm.class).bindFromRequest();
+    public Result runUpsertBook() {
+        BookForm bookForm = form(BookForm.class).bindFromRequest().get();
+        Book book = new Book();
 
         //TODO validate
 
-        Book book = new Book();
-        book.setTitle(bookForm.get().title);
-        book.setAuthor(bookForm.get().author);
-        book.setPages(bookForm.get().pages);
-        book.setDescription(bookForm.get().description);
-        book.save();
+
+        book.setTitle(bookForm.title);
+        book.setAuthor(bookForm.author);
+        book.setPages(bookForm.pages);
+        book.setDescription(bookForm.description);
+        if(bookForm.id != null) { //Edit
+            book.setId(bookForm.id);
+            book.update();
+        } else {
+            book.save();
+        }
 
         return redirect(routes.Application.index());
     }
 
     public static class BookForm {
+
+        public Long id;
 
         @Constraints.MaxLength(150)
         @Constraints.Required

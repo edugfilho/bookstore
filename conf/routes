@@ -6,8 +6,8 @@
 GET     /                           controllers.Application.index()
 GET     /books                      controllers.Application.listBooks()
 
-GET     /book                       controllers.Application.insertBook()
-POST    /book                       controllers.Application.runInsertBook()
+GET     /book/:create,:id           controllers.Application.upsertBook(create: Boolean, id: Long)
+POST    /book                       controllers.Application.runUpsertBook()
 
 GET     /dashboard                  controllers.Dashboard.index()
 

@@ -1,10 +1,57 @@
 @(bookForm: Form[controllers.Application.BookForm])
 
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#mainTable').DataTable({
+        "ajax": {
+            "url": "@routes.Application.listBooks",
+            "dataSrc": "",
+        },
+        "columns": [
+            {"data": "id"},
+            {"data": "title"},
+            {"data": "author"},
+            {"data": "pages"},
+            {
+                "sortable": false,
+                "render": function (data, type, row) {
+                    return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" style="font-size: 22px;" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" style="font-size: 22px;" data-original-title="Delete"></a>';
+                }
+            }
+        ]
+    });
+});
+$(function() {
+   $("#addBookBtn").click(function(a){
+       $("#modalContent").empty();
+       $("#bookModal").modal("show")
+       $.get("@routes.Application.upsertBook(true, 0L)", function(data){
+           $("#modalContent").append(data);
+       });
+   });
+});
+function editItem(id){
+   $("#modalContent").empty();
+   $("#bookModal").modal("show")
+   $.get("/book/false," + id , function(data){
+       $("#modalContent").append(data);
+   });
+};
+</script>
+
 <div>
-    <a data-toggle="modal" href="#bookModal" class="btn btn-primary btn-lg">Add new</a>
+    <a id="addBookBtn" class="btn btn-primary btn-lg" name="1">Add new</a>
 </div>
 
-@bookModal(bookForm, true)
+<!-- Modal -->
+<div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modalContent">
+            something
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <table id="mainTable" class="display">
     <thead>
         <tr>
@@ -12,6 +59,7 @@
             <th>Title</th>
             <th>Author</th>
             <th>Pages</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
