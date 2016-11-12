@@ -22,19 +22,20 @@ $(document).ready(function(){
     });
 });
 $(function() {
-   $("#addBookBtn").click(function(a){
-       $("#modalContent").empty();
-       $("#bookModal").modal("show")
-       $.get("@routes.Application.upsertBook(true, 0L)", function(data){
-           $("#modalContent").append(data);
-       });
-   });
+    $("#addBookBtn").click(function(a){
+        $("#modalFields").empty();
+        $("#bookModal").modal("show")
+        $.get("@routes.Application.upsertBook(true, 0L)", function(data){
+           $("#modalFields").append(data);
+        });
+    });
 });
+
 function editItem(id){
-   $("#modalContent").empty();
+   $("#modalFields").empty();
    $("#bookModal").modal("show")
    $.get("/book/false," + id , function(data){
-       $("#modalContent").append(data);
+       $("#modalFields").append(data);
    });
 };
 function removeItem(id){
@@ -62,9 +63,34 @@ function removeItem(id){
 
 <!-- Modal -->
 <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" id="modalContent">
 
+            <div class="modal-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Create book</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <form action="UploadImages" class="dropzone" id="fileupload" enctype="multipart/form-data">
+
+                        </form>
+                    </div>
+
+                    <div id="modalFields">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="bookForm" class="btn btn-primary">Submit</button>
+            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
