@@ -39,7 +39,7 @@ public class Application extends Controller {
     public Result index() {
 
         Form<BookForm> bookForm = form(BookForm.class);
-        return ok(index.render(bookForm));
+        return ok(index.render());
     }
 
     public Result listBooks() {
@@ -91,6 +91,15 @@ public class Application extends Controller {
         }
 
         return redirect(routes.Application.index());
+    }
+
+    public Result runDeleteBook(Long id) {
+        if(id != null) {
+            Book.find.byId(id).delete();
+        }
+        //I tried to escape from this but found no other way =P
+        //Simply returns "redirect":"\"
+        return ok(Json.parse("{\"redirect\":\"\\\\\"}"));
     }
 
     public static class BookForm {
@@ -196,7 +205,7 @@ public class Application extends Controller {
         Form<Register> registerForm = form(Register.class);
 
         if (loginForm.hasErrors()) {
-            return badRequest(index.render(null));
+            return badRequest(index.render());
         } else {
             session("email", loginForm.get().email);
             return GO_DASHBOARD;

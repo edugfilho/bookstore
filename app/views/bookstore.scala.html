@@ -1,5 +1,3 @@
-@(bookForm: Form[controllers.Application.BookForm])
-
 <script type="text/javascript">
 $(document).ready(function(){
     $('#mainTable').DataTable({
@@ -15,7 +13,7 @@ $(document).ready(function(){
             {
                 "sortable": false,
                 "render": function (data, type, row) {
-                    return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" style="font-size: 22px;" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" style="font-size: 22px;" data-original-title="Delete"></a>';
+                    return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" style="font-size: 22px;" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" onclick="removeItem(\'' + row.id + '\')" style="font-size: 22px;" data-original-title="Delete"></a>';
                 }
             }
         ]
@@ -37,6 +35,25 @@ function editItem(id){
        $("#modalContent").append(data);
    });
 };
+function removeItem(id){
+    bootbox.confirm({
+        size: "small",
+        message: "Are you sure?",
+        callback: function(res) {
+            if(res){
+                $.ajax({
+                    url: '/book/' + id,
+                    type: 'DELETE',
+                    success: function(result) {
+                       if (result.redirect) {
+                            window.location.href = result.redirect;
+                       }
+                    }
+                });
+            }
+        }
+    });
+};
 </script>
 
 <div>
@@ -47,7 +64,7 @@ function editItem(id){
 <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="modalContent">
-            something
+
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

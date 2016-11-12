@@ -8,6 +8,7 @@ GET     /books                      controllers.Application.listBooks()
 
 GET     /book/:create,:id           controllers.Application.upsertBook(create: Boolean, id: Long)
 POST    /book                       controllers.Application.runUpsertBook()
+DELETE  /book/:id                   controllers.Application.runDeleteBook(id: Long)
 
 GET     /dashboard                  controllers.Dashboard.index()
 
