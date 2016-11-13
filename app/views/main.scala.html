@@ -1,4 +1,4 @@
-@(user: User = null, scripts: Html = Html(""))(content: Html)
+@()(content: Html)
 
 <!DOCTYPE html>
 
@@ -21,8 +21,6 @@
         <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase-storage.js"></script>
         <script src="@routes.Assets.at("javascripts/scripts.js")" type="text/javascript"></script>
-
-        @scripts
     </head>
     <body>
 

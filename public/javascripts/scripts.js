@@ -7,6 +7,7 @@ $(document).ready(function(){
     };
     firebase.initializeApp(config);
 
+    //Init datatable
     $('#mainTable').DataTable({
         "dom": '<"row" <"col-md-4"<"pull-left"f>><"col-md-3"<"pull-right"i>>><"row"<"col-md-12" tlp>>',
         "ajax": {
@@ -18,18 +19,21 @@ $(document).ready(function(){
             {"data": "title"},
             {"data": "author"},
             {"data": "pages", "width": "10%",},
-            {
+            {   //Thumbnail
                 "sortable": false,
                 "width": "10%",
                 "render": function (data, type, row) {
-                    return '<img src="'+ jsRoutes.controllers.Application.fileDownload(row.coverId).url + '" class="thumbnail" alt="Book cover" />';
+                    var image = new Image();
+                    image.src = "data:image/jpeg;base64,";
+                    image.src += row.thumbnail;
+                    return '<img src="'+ image.src + '" alt="Book cover" />';
                 }
             },
-            {
+            {   //Actions "Edit" and "Delete"
                 "sortable": false,
                 "width": "10%",
                 "render": function (data, type, row) {
-                    return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" style="font-size: 22px;" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" onclick="removeItem(\'' + row.id + '\')" style="font-size: 22px;" data-original-title="Delete"></a>';
+                    return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" onclick="removeItem(\'' + row.id + '\')" data-original-title="Delete"></a>';
                 }
             }
         ]
@@ -41,6 +45,7 @@ function cleanModal() {
     $("#modalFields").empty();
     $("#coverPicture").remove();
 }
+
 $(function() {
     $("#addBookBtn").click(function(){
         cleanModal();
@@ -59,7 +64,7 @@ function editItem(id){
    $.get(jsRoutes.controllers.Application.upsertBook(false, id).url , function(data){
        $("#modalFields").append(data);
        coverId = $(data).find("#coverId").val();
-       placeCover(coverId);
+       placeCover();
    });
    $("#modalTitle").html("Edit book");
 };
@@ -84,10 +89,14 @@ function removeItem(id){
     });
 };
 
-function placeCover() {
+function placeCover(memoryImg) {
     var coverId = $("#coverId").val();
-    var imgUrl = jsRoutes.controllers.Application.fileDownload(coverId).url;
+    var imgUrl = memoryImg || jsRoutes.controllers.Application.fileDownload(coverId).url;
     $("#fileupload").html('<img src="'+ imgUrl + '" id="coverPicture" class="cover-picture" alt="Book cover" />')
+}
+
+function removeCover(dropzoneObj) {
+    $("#coverPicture").remove();
 }
 
 function configDropzone() {
@@ -95,22 +104,24 @@ function configDropzone() {
         url: jsRoutes.controllers.Application.fileUpload().url,
         paramName: "cover", // The name that will be used to transfer the file
         maxFilesize: 5, // MB
-        maxFiles: 1,
+        parallelUploads: 1,
         clickable: true,
-        autoProcessQueue: false,
+        autoProcessQueue: true,
         acceptedFiles: '.jpg,.jpeg,.JPEG,.JPG,.png,.PNG',
-        addRemoveLinks: true,
-        dictDefaultMessage: "Drop your image here and select \"Apply cover\" to",
+        dictDefaultMessage: "Drop your new cover here",
+        //previewTemplate: $("#preview-template").html(),
         init: function() {
             var coverDropzone = this;
             $("#addBookBtn").click(function(){
                 coverDropzone.removeAllFiles(true);
             });
-            $("#submitCover").click(function(){
-                coverDropzone.processQueue();
+            this.on("drop", function(){
+                removeCover(coverDropzone);
             });
             this.on("success", function(file, resp) {
                 $("#coverId").val(resp.id);
+                placeCover();
+                //coverDropzone.removeAllFiles();
             });
         }
     };

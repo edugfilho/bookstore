@@ -1,4 +1,12 @@
-
+<!-- Dropzone preview template -->
+<div id="preview-template" style="display: none;">
+    <div class="dz-preview dz-file-preview">
+        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+        <div class="dz-success-mark"><span>✔</span></div>
+        <div class="dz-error-mark"><span>✘</span></div>
+        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+    </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -18,7 +26,6 @@
                         <label for="fileupload">Book cover</label>
                         <form class="dropzone" id="fileupload" enctype="multipart/form-data">
                         </form>
-                        <button type="button" id="submitCover" class="btn btn-primary btn-upload col-md-12">Apply cover</button>
                     </div>
 
                     <div id="modalFields">

@@ -5,6 +5,7 @@ import com.avaje.ebean.Model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,7 +36,11 @@ public class Book extends Model {
 
     @Column
     @NotNull
-    private String coverId;
+    private Long coverId;
+
+    @Lob
+    @NotNull
+    private byte[] thumbnail;
 
     public static Finder<Long, Book> find = new Finder<Long,Book>(Book.class);
 
@@ -79,11 +84,19 @@ public class Book extends Model {
         this.pages = pages;
     }
 
-    public String getCoverId() {
+    public Long getCoverId() {
         return coverId;
     }
 
-    public void setCoverId(String coverId) {
+    public void setCoverId(Long coverId) {
         this.coverId = coverId;
+    }
+
+    public byte[] getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(byte[] thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

@@ -14,6 +14,9 @@ libraryDependencies ++= Seq(
   filters
 )
 
+// https://mvnrepository.com/artifact/com.mortennobel/java-image-scaling
+libraryDependencies += "com.mortennobel" % "java-image-scaling" % "0.8.5"
+
 resolvers ++= Seq(
     "Apache" at "http://repo1.maven.org/maven2/",
     "jBCrypt Repository" at "http://repo1.maven.org/maven2/org/",
