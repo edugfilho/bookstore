@@ -4,6 +4,7 @@ import models.Book;
 import models.User;
 import models.utils.AppException;
 import play.Logger;
+import play.Routes;
 import play.data.Form;
 import play.data.validation.Constraints;
 import play.i18n.Messages;
@@ -30,6 +31,18 @@ public class Application extends Controller {
     public static Result GO_DASHBOARD = redirect(
             routes.Dashboard.index()
     );
+
+    public Result javascriptRoutes() {
+        response().setContentType("text/javascript");
+        return ok(
+                Routes.javascriptRouter("jsRoutes",
+                        routes.javascript.Application.listBooks(),
+                        routes.javascript.Application.upsertBook(),
+                        routes.javascript.Application.runUpsertBook(),
+                        routes.javascript.Application.runDeleteBook()
+                )
+        );
+    }
 
     /**
      * Display the list of books on the DB.

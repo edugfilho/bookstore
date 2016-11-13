@@ -3,6 +3,7 @@
 # ~~~~
 
 # Home page
+GET     /assets/javascripts/routes  controllers.Application.javascriptRoutes()
 GET     /                           controllers.Application.index()
 GET     /books                      controllers.Application.listBooks()
 
