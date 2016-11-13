@@ -1,19 +1,24 @@
 package controllers;
 
 import models.Book;
+import models.BookCover;
 import models.User;
 import models.utils.AppException;
-import play.Logger;
 import play.Routes;
+import play.mvc.Http.MultipartFormData;
 import play.data.Form;
 import play.data.validation.Constraints;
 import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import views.html.bookModalContent;
 import views.html.index;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import static play.data.Form.form;
@@ -39,7 +44,9 @@ public class Application extends Controller {
                         routes.javascript.Application.listBooks(),
                         routes.javascript.Application.upsertBook(),
                         routes.javascript.Application.runUpsertBook(),
-                        routes.javascript.Application.runDeleteBook()
+                        routes.javascript.Application.runDeleteBook(),
+                        routes.javascript.Application.fileUpload(),
+                        routes.javascript.Application.fileDownload()
                 )
         );
     }
@@ -113,6 +120,36 @@ public class Application extends Controller {
         //I tried to escape from this but found no other way =P
         //Simply returns "redirect":"\"
         return ok(Json.parse("{\"redirect\":\"\\\\\"}"));
+    }
+
+    public Result fileUpload() {
+        MultipartFormData body = request().body().asMultipartFormData();
+        MultipartFormData.FilePart picture = body.getFile("cover");
+        if (picture != null) {
+            String fileName = picture.getFilename();
+            String contentType = picture.getContentType();
+            File file = picture.getFile();
+            BookCover cover = new BookCover();
+            try {
+                cover.setPicture(fileToByte(file));
+                cover.save();
+            } catch (IOException e) {
+                return internalServerError(e.getMessage());
+            }
+
+            return ok(Json.parse("{\"id\": " + cover.getId() +"}"));
+        } else {
+            flash("error", "Missing file");
+            return badRequest();
+        }
+    }
+
+    private byte[] fileToByte(File f) throws IOException {
+        return Files.readAllBytes(f.toPath());
+    }
+
+    public Result fileDownload(Long id) {
+        return ok();
     }
 
     public static class BookForm {

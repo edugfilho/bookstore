@@ -27,6 +27,7 @@ $(document).ready(function(){
             }
         ]
     });
+    configDropzone();
 });
 $(function() {
     $("#addBookBtn").click(function(){
@@ -72,14 +73,19 @@ function removeItem(id){
 
 function configDropzone() {
     Dropzone.options.fileupload = {
+        url: jsRoutes.controllers.Application.fileUpload().url,
         paramName: "cover", // The name that will be used to transfer the file
         maxFilesize: 5, // MB
-        uploadMultiple: false,
-        parallelUploads: false,
+        maxFiles: 1,
         clickable: true,
-
-        accept: function(file, done) {
-
+        autoProcessQueue: false,
+        acceptedFiles: '.jpg,.jpeg,.JPEG,.JPG,.png,.PNG',
+        addRemoveLinks: true,
+        init: function() {
+            var coverDropzone = this;
+            $("#submitBook").click(function(){
+                coverDropzone.processQueue();
+            });
         }
     };
 }

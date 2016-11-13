@@ -16,8 +16,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <label for="fileupload">Book cover</label>
-                        <form action="UploadImages" class="dropzone" id="fileupload" enctype="multipart/form-data">
-
+                        <form class="dropzone" id="fileupload" enctype="multipart/form-data">
                         </form>
                     </div>
 
@@ -28,7 +27,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" form="bookForm" class="btn btn-primary">Submit</button>
+                <button type="submit" id="submitBook" form="bookForm" class="btn btn-primary">Submit</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -52,4 +51,3 @@
 
     </table>
 </div>
-<script src="@routes.Assets.at("javascripts/scripts.js")" type="text/javascript"></script>

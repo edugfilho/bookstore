@@ -11,6 +11,9 @@ GET     /book/:create,:id           controllers.Application.upsertBook(create: B
 POST    /book                       controllers.Application.runUpsertBook()
 DELETE  /book/:id                   controllers.Application.runDeleteBook(id: Long)
 
+POST    /cover                      controllers.Application.fileUpload()
+GET     /cover/:id                  controllers.Application.fileDownload(id: Long)
+
 GET     /dashboard                  controllers.Dashboard.index()
 
 POST    /login                      controllers.Application.authenticate()
