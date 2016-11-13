@@ -1,7 +1,6 @@
 package models;
 
 import com.avaje.ebean.Model;
-import play.data.validation.Constraints;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,8 +34,8 @@ public class Book extends Model {
     private int pages;
 
     @Column
-    //TODO @NotNull
-    private String coverUrl;
+    @NotNull
+    private String coverId;
 
     public static Finder<Long, Book> find = new Finder<Long,Book>(Book.class);
 
@@ -80,11 +79,11 @@ public class Book extends Model {
         this.pages = pages;
     }
 
-    public String getCoverUrl() {
-        return coverUrl;
+    public String getCoverId() {
+        return coverId;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
+    public void setCoverId(String coverId) {
+        this.coverId = coverId;
     }
 }

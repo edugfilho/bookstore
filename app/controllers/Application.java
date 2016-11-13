@@ -87,6 +87,7 @@ public class Application extends Controller {
             formData.description = book.getDescription();
             formData.pages = book.getPages();
             formData.title = book.getTitle();
+            formData.coverId = book.getCoverId();
             bookForm = bookForm.fill(formData);
         }
         return ok(bookModalContent.render(bookForm, create));
@@ -103,6 +104,7 @@ public class Application extends Controller {
         book.setAuthor(bookForm.author);
         book.setPages(bookForm.pages);
         book.setDescription(bookForm.description);
+        book.setCoverId(bookForm.coverId);
         if(bookForm.id != null) { //Edit
             book.setId(bookForm.id);
             book.update();
@@ -149,7 +151,8 @@ public class Application extends Controller {
     }
 
     public Result fileDownload(Long id) {
-        return ok();
+        byte[] pic = BookCover.find.byId(id).getPicture();
+        return ok(pic).as("image/jpeg");
     }
 
     public static class BookForm {
@@ -171,7 +174,9 @@ public class Application extends Controller {
 
         @Constraints.MaxLength(500)
         public String description;
-        public String coverUrl;
+
+        //TODO: @Constraints.Required
+        public String coverId;
     }
 
     /**

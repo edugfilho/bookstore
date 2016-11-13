@@ -22,6 +22,13 @@ $(document).ready(function(){
                 "sortable": false,
                 "width": "10%",
                 "render": function (data, type, row) {
+                    return '<img src="'+ jsRoutes.controllers.Application.fileDownload(row.coverId).url + '" class="thumbnail" alt="Book cover" />';
+                }
+            },
+            {
+                "sortable": false,
+                "width": "10%",
+                "render": function (data, type, row) {
                     return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" style="font-size: 22px;" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" onclick="removeItem(\'' + row.id + '\')" style="font-size: 22px;" data-original-title="Delete"></a>';
                 }
             }
@@ -29,26 +36,32 @@ $(document).ready(function(){
     });
     configDropzone();
 });
+
+function cleanModal() {
+    $("#modalFields").empty();
+    $("#coverPicture").remove();
+}
 $(function() {
     $("#addBookBtn").click(function(){
-        $("#modalFields").empty();
+        cleanModal();
         $("#bookModal").modal("show")
         $.get(jsRoutes.controllers.Application.upsertBook(true, 0).url, function(data){
            $("#modalFields").append(data);
            $("#modalTitle").html("Create book");
         });
-        configDropzone();
     });
 });
 
 function editItem(id){
-   $("#modalFields").empty();
+   cleanModal();
    $("#bookModal").modal("show")
+    var coverId;
    $.get(jsRoutes.controllers.Application.upsertBook(false, id).url , function(data){
        $("#modalFields").append(data);
+       coverId = $(data).find("#coverId").val();
+       placeCover(coverId);
    });
    $("#modalTitle").html("Edit book");
-   configDropzone();
 };
 
 function removeItem(id){
@@ -71,6 +84,12 @@ function removeItem(id){
     });
 };
 
+function placeCover() {
+    var coverId = $("#coverId").val();
+    var imgUrl = jsRoutes.controllers.Application.fileDownload(coverId).url;
+    $("#fileupload").html('<img src="'+ imgUrl + '" id="coverPicture" class="cover-picture" alt="Book cover" />')
+}
+
 function configDropzone() {
     Dropzone.options.fileupload = {
         url: jsRoutes.controllers.Application.fileUpload().url,
@@ -81,10 +100,17 @@ function configDropzone() {
         autoProcessQueue: false,
         acceptedFiles: '.jpg,.jpeg,.JPEG,.JPG,.png,.PNG',
         addRemoveLinks: true,
+        dictDefaultMessage: "Drop your image here and select \"Apply cover\" to",
         init: function() {
             var coverDropzone = this;
-            $("#submitBook").click(function(){
+            $("#addBookBtn").click(function(){
+                coverDropzone.removeAllFiles(true);
+            });
+            $("#submitCover").click(function(){
                 coverDropzone.processQueue();
+            });
+            this.on("success", function(file, resp) {
+                $("#coverId").val(resp.id);
             });
         }
     };
