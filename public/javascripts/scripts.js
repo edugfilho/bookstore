@@ -54,6 +54,15 @@ $(function() {
         $.get(jsRoutes.controllers.Application.upsertBook(true, 0).url, function(data){
            $("#modalFields").append(data);
            $("#modalTitle").html("Create book");
+           $('.typeahead').typeahead({
+                minLength: 3,
+                source: function (query, process) {
+                    return executeTitleSearch(process);
+                },
+                afterSelect: function (item) {
+                    autoFill(item);
+                }
+           });
         });
     });
 
@@ -88,6 +97,15 @@ function editItem(id){
     $.get(jsRoutes.controllers.Application.upsertBook(false, id).url , function(data){
        $("#modalFields").append(data);
        coverId = $(data).find("#coverId").val();
+        $('.typeahead').typeahead({
+            minLength: 3,
+            source: function (query, process) {
+               return executeTitleSearch(process);
+            },
+            afterSelect: function (item) {
+               autoFill(item);
+            }
+        });
        placeCover();
     });
     $("#modalTitle").html("Edit book");
