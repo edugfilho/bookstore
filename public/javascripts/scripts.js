@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+    $("#success-alert").hide();
     //Init datatable
     $('#mainTable').DataTable({
         "dom": '<"row" <"col-md-4"<"pull-left"f>><"col-md-3"<"pull-right"i>>><"row"<"col-md-12" tlp>>',
@@ -91,7 +91,6 @@ function editItem(id){
        placeCover();
     });
     $("#modalTitle").html("Edit book");
-    $("#divFileupload").append('<p class="help-block text-center" stryle="top: 100px">To change the book cover, simply drop another image over the current one.</p>');
 };
 
 function removeItem(id){
@@ -143,7 +142,6 @@ function configDropzone() {
         addRemoveLinks: true,
         acceptedFiles: '.jpg,.jpeg,.JPEG,.JPG,.png,.PNG',
         dictDefaultMessage: "",
-        //previewTemplate: $("#preview-template").html(),
         init: function() {
             var coverDropzone = this;
             coverDropzone.currentUpload = null;
