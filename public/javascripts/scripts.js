@@ -19,7 +19,7 @@ $(document).ready(function(){
                     var image = new Image();
                     image.src = "data:image/jpeg;base64,";
                     image.src += row.thumbnail;
-                    return '<img src="'+ image.src + '" class="img-thumbnail" alt="Book cover" onclick="showImg('+ row.coverId +')"/>';
+                    return '<img src="'+ image.src + '" class="img-thumbnail" data-toggle="tooltip" title="Click to see original size" alt="Book cover" onclick="showImg('+ row.coverId +')"/>';
                 }
             },
             {   //Actions "Edit" and "Delete"
