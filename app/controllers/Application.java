@@ -26,6 +26,7 @@ import static play.data.Form.form;
  */
 public class Application extends Controller {
 
+    private static final String JSON_REDIR_HOME = "{\"redirect\":\"\\\\\"}";
     public Result javascriptRoutes() {
         response().setContentType("text/javascript");
         return ok(
@@ -79,7 +80,7 @@ public class Application extends Controller {
             formData.coverId = book.getCoverId();
             bookForm = bookForm.fill(formData);
         }
-        return ok(bookModalContent.render(bookForm, create));
+        return ok(bookModalContent.render(bookForm));
     }
 
     private byte[] getFileBytesFromRequest(Http.Request request, String fieldName) throws IOException {
@@ -95,11 +96,12 @@ public class Application extends Controller {
     }
 
     public Result runUpsertBook() {
-        BookForm bookForm = form(BookForm.class).bindFromRequest().get();
+        Form<BookForm> viewForm = form(BookForm.class).bindFromRequest();
+        if(viewForm.hasErrors()) {
+            return badRequest(viewForm.errorsAsJson());
+        }
+        BookForm bookForm = viewForm.get();
         Book book = new Book();
-
-        //TODO validate
-
 
         book.setTitle(bookForm.title);
         book.setAuthor(bookForm.author);
@@ -120,7 +122,7 @@ public class Application extends Controller {
             book.save();
         }
 
-        return redirect(routes.Application.index());
+        return ok(Json.parse(JSON_REDIR_HOME));
     }
 
     public Result runDeleteBook(Long id) {
@@ -129,7 +131,7 @@ public class Application extends Controller {
         }
         //I tried to escape from this but found no other way =P
         //Simply returns "redirect":"\"
-        return ok(Json.parse("{\"redirect\":\"\\\\\"}"));
+        return ok(Json.parse(JSON_REDIR_HOME));
     }
 
     public Result fileUpload() {
@@ -179,7 +181,7 @@ public class Application extends Controller {
         @Constraints.MaxLength(500)
         public String description;
 
-        //TODO: @Constraints.Required
+        @Constraints.Required
         public Long coverId;
     }
 }

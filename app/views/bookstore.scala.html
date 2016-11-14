@@ -22,9 +22,10 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div id="divFileupload" class="col-sm-4">
                         <label for="fileupload">Book cover</label>
-                        <form class="dropzone" id="fileupload" enctype="multipart/form-data">
+                        <form id="fileupload" class="dropzone well" id="fileupload" enctype="multipart/form-data">
+
                         </form>
                     </div>
 
@@ -35,7 +36,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" id="submitBook" form="bookForm" class="btn btn-primary">Submit</button>
+                <button type="button" id="submitBook" form="bookForm" class="btn btn-primary">Submit</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

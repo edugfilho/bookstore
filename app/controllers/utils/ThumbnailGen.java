@@ -44,6 +44,6 @@ public class ThumbnailGen {
         resampleOp.setFilter(ResampleFilters.getLanczos3Filter());
         resampleOp.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Normal);
         BufferedImage destImage = resampleOp.filter(sourceImage, null);
-        return writeJpeg(destImage, 0.9f);
+        return writeJpeg(destImage, 1.0f);
     }
 }

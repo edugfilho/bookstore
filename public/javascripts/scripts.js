@@ -26,20 +26,25 @@ $(document).ready(function(){
                     var image = new Image();
                     image.src = "data:image/jpeg;base64,";
                     image.src += row.thumbnail;
-                    return '<img src="'+ image.src + '" alt="Book cover" />';
+                    return '<img src="'+ image.src + '" class="img-thumbnail" alt="Book cover" onclick="showImg('+ row.coverId +')"/>';
                 }
             },
             {   //Actions "Edit" and "Delete"
                 "sortable": false,
                 "width": "10%",
                 "render": function (data, type, row) {
-                    return '<a class="editBookBtn btn btn-lg ui-tooltip fa fa-pencil" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip fa fa-trash-o" onclick="removeItem(\'' + row.id + '\')" data-original-title="Delete"></a>';
+                    return '<a class="editBookBtn btn btn-lg ui-tooltip glyphicon glyphicon-pencil" onclick="editItem(\'' + row.id + '\')" data-original-title="Edit"></a>  <a class="btn btn-lg ui-tooltip glyphicon glyphicon-trash" onclick="removeItem(\'' + row.id + '\')" data-original-title="Delete"></a>';
                 }
             }
         ]
     });
     configDropzone();
 });
+
+function showImg(coverId) {
+    var imgUrl = jsRoutes.controllers.Application.fileDownload(coverId).url;
+    bootbox.alert('<img src="'+ imgUrl + '" class="img-responsive" alt="Book cover" />')
+}
 
 function cleanModal() {
     $("#modalFields").empty();
@@ -49,11 +54,33 @@ function cleanModal() {
 $(function() {
     $("#addBookBtn").click(function(){
         cleanModal();
+        resetDropArea();
         $("#bookModal").modal("show")
         $.get(jsRoutes.controllers.Application.upsertBook(true, 0).url, function(data){
            $("#modalFields").append(data);
            $("#modalTitle").html("Create book");
         });
+    });
+});
+
+$(function() {
+    $("#submitBook").click(function(){
+        $bookForm = $('#bookForm')[0];
+        if(!$bookForm.checkValidity()){ // Form not valid? show UI errors.
+            $('<input type="submit">').hide().appendTo($bookForm).click().remove();
+        } else {
+            var postUrl = jsRoutes.controllers.Application.runUpsertBook().url;
+            $.post(postUrl, $('#bookForm').serialize())
+            .done(function(result){
+                if (result.redirect) {
+                    window.location.href = result.redirect;
+                }
+            })
+            .fail(function(xhr, status, error) {
+                var jsonErr = xhr.responseJSON;
+                $("#fileupload").html('<div class="alert alert-danger"> <strong>This book needs a cover!</strong></div>');
+            });
+        }
     });
 });
 
@@ -95,6 +122,9 @@ function placeCover(memoryImg) {
     $("#fileupload").html('<img src="'+ imgUrl + '" id="coverPicture" class="cover-picture" alt="Book cover" />')
 }
 
+function resetDropArea() {
+    $("#fileupload").html('<p class="help-block text-center" stryle="top: 100px">Drag and drop your cover picture here </p>');
+}
 function removeCover(dropzoneObj) {
     $("#coverPicture").remove();
 }
@@ -107,21 +137,30 @@ function configDropzone() {
         parallelUploads: 1,
         clickable: true,
         autoProcessQueue: true,
+        addRemoveLinks: true,
         acceptedFiles: '.jpg,.jpeg,.JPEG,.JPG,.png,.PNG',
-        dictDefaultMessage: "Drop your new cover here",
+        dictDefaultMessage: "",
         //previewTemplate: $("#preview-template").html(),
         init: function() {
             var coverDropzone = this;
+            coverDropzone.currentUpload = null;
             $("#addBookBtn").click(function(){
                 coverDropzone.removeAllFiles(true);
             });
-            this.on("drop", function(){
+            this.on("drop", function(file){
                 removeCover(coverDropzone);
+            });
+            this.on("addedfile", function(file){
+                removeCover(coverDropzone);
+                if(coverDropzone.currentUpload) {
+                    coverDropzone.removeFile(coverDropzone.currentUpload);
+                }
+                coverDropzone.currentUpload = file;
             });
             this.on("success", function(file, resp) {
                 $("#coverId").val(resp.id);
                 placeCover();
-                //coverDropzone.removeAllFiles();
+                coverDropzone.removeAllFiles();
             });
         }
     };

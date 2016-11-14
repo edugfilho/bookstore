@@ -1,10 +1,11 @@
-@(bookForm: Form[controllers.Application.BookForm], create: Boolean)
+@(bookForm: Form[controllers.Application.BookForm])
 @import helper._
 
 @form(controllers.routes.Application.runUpsertBook(), 'id -> "bookForm"){
+
     <div class="col-sm-8">
         <input type="hidden" name="id" value='@bookForm("id").value' >
-        <input type="hidden" id="coverId" name="coverId" value='@bookForm("coverId").value' >
+        <input type="hidden" id="coverId" name="coverId" value='@bookForm("coverId").value' required="true">
         @inputText(
             bookForm("title"),
             'placeholder -> "e.g. The Hitchhicker's Guide to the Galaxy",
