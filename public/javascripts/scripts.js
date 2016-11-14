@@ -1,11 +1,4 @@
 $(document).ready(function(){
-    // Initialize Firebase
-    var config = {
-        apiKey: "<API_KEY>",
-        authDomain: "bookstore-eduardo.firebaseapp.com",
-        storageBucket: "gs://bookstore-eduardo.appspot.com",
-    };
-    firebase.initializeApp(config);
 
     //Init datatable
     $('#mainTable').DataTable({
@@ -39,11 +32,13 @@ $(document).ready(function(){
         ]
     });
     configDropzone();
+
 });
 
 function showImg(coverId) {
     var imgUrl = jsRoutes.controllers.Application.fileDownload(coverId).url;
     bootbox.alert('<img src="'+ imgUrl + '" class="img-responsive" alt="Book cover" />')
+
 }
 
 function cleanModal() {
@@ -61,6 +56,7 @@ $(function() {
            $("#modalTitle").html("Create book");
         });
     });
+
 });
 
 $(function() {
@@ -82,18 +78,20 @@ $(function() {
             });
         }
     });
+
 });
 
 function editItem(id){
-   cleanModal();
-   $("#bookModal").modal("show")
+    cleanModal();
+    $("#bookModal").modal("show")
     var coverId;
-   $.get(jsRoutes.controllers.Application.upsertBook(false, id).url , function(data){
+    $.get(jsRoutes.controllers.Application.upsertBook(false, id).url , function(data){
        $("#modalFields").append(data);
        coverId = $(data).find("#coverId").val();
        placeCover();
-   });
-   $("#modalTitle").html("Edit book");
+    });
+    $("#modalTitle").html("Edit book");
+    $("#divFileupload").append('<p class="help-block text-center" stryle="top: 100px">To change the book cover, simply drop another image over the current one.</p>');
 };
 
 function removeItem(id){
@@ -114,19 +112,24 @@ function removeItem(id){
             }
         }
     });
+
 };
 
 function placeCover(memoryImg) {
     var coverId = $("#coverId").val();
     var imgUrl = memoryImg || jsRoutes.controllers.Application.fileDownload(coverId).url;
     $("#fileupload").html('<img src="'+ imgUrl + '" id="coverPicture" class="cover-picture" alt="Book cover" />')
+
 }
 
 function resetDropArea() {
     $("#fileupload").html('<p class="help-block text-center" stryle="top: 100px">Drag and drop your cover picture here </p>');
+
 }
+
 function removeCover(dropzoneObj) {
     $("#coverPicture").remove();
+
 }
 
 function configDropzone() {
@@ -147,21 +150,41 @@ function configDropzone() {
             $("#addBookBtn").click(function(){
                 coverDropzone.removeAllFiles(true);
             });
-            this.on("drop", function(file){
-                removeCover(coverDropzone);
+            this.on("dragenter", function(file){
+                //Can't empty content while upload is in progress. Must happen with removeFile()
+                if(!coverDropzone.currentUpload){
+                    $("#fileupload").children().hide();
+                }
+            });
+            this.on("dragleave", function(file){
+                if(!coverDropzone.currentUpload){
+                    $("#fileupload").children().show();
+                }
             });
             this.on("addedfile", function(file){
-                removeCover(coverDropzone);
+                //If a new file is dropped while an upload is in progress, abort the current upload
                 if(coverDropzone.currentUpload) {
                     coverDropzone.removeFile(coverDropzone.currentUpload);
+                } else {
+                    removeCover();
                 }
                 coverDropzone.currentUpload = file;
+            });
+            this.on("removedfile", function(file){
+                coverDropzone.currentUpload = null;
+            });
+            this.on("cancelled", function(file){
+                coverDropzone.currentUpload = null;
+            });
+            this.on("error", function(file){
+                coverDropzone.currentUpload = null;
             });
             this.on("success", function(file, resp) {
                 $("#coverId").val(resp.id);
                 placeCover();
-                coverDropzone.removeAllFiles();
+                coverDropzone.currentUpload = null;
             });
         }
     };
+
 }
